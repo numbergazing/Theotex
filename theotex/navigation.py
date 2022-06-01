@@ -2,8 +2,8 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from requests import Response
 
-from theotex import SeptuagintBook
-from theotex.urls import Book, SEPTUAGINT_CHAPTER, NEW_TESTAMENT_CHAPTER
+from theotex import Book
+from theotex.urls import construct_chapter_url
 
 
 def nb_chapters_for(book: Book) -> int:
@@ -13,11 +13,7 @@ def nb_chapters_for(book: Book) -> int:
     html: BeautifulSoup
     last_chapter_link: Tag
 
-    if type(book) is SeptuagintBook:
-        url = SEPTUAGINT_CHAPTER.format(book=book.value, chapter_nb=1)
-    else:
-        url = NEW_TESTAMENT_CHAPTER.format(book=book.value, chapter_nb=1)
-
+    url = construct_chapter_url(book, 1)
     request = requests.get(url)
     html = BeautifulSoup(request.text, "html.parser")
     last_chapter_link = html.table.table.find_all("tr")[2].find_all("td")[2].find_all("a")[-1]

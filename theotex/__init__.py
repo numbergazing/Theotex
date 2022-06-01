@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Union
 
 
 class Corpus(Enum):
@@ -89,3 +90,6 @@ class NewTestamentBook(Enum):
     JOHN3 = "3jean"
     JUDE = "jude"
     REVELATION = "apocalypse"
+
+
+Book = Union[SeptuagintBook, NewTestamentBook]
