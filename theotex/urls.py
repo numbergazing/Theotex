@@ -11,7 +11,7 @@ NEW_TESTAMENT_CHAPTER = NEW_TESTAMENT.join("/{book}/{book}_{chapter_nb}_gf.html"
 Book = Union[SeptuagintBook, NewTestamentBook]
 
 
-def construct_chapter_url(corpus: Corpus, book: Book, chapter: int):
+def construct_chapter_url(corpus: Corpus, book: Book, chapter: int) -> str:
 
     url: str
 
