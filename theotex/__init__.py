@@ -1,13 +1,20 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import Union
 
 
-class Corpus(Enum):
+class TheotexEnum(Enum):
+
+    def __repr__(self):
+        return self.value
+
+
+class Corpus(TheotexEnum):
     SEPTUAGINT = "septuaginta"
     NEW_TESTAMENT = "ntgf"
 
 
-class SeptuagintBook(Enum):
+class SeptuagintBook(TheotexEnum):
     GENESIS = "genese"
     EXODUS = "exode"
     LEVITICUS = "levitique"
@@ -62,7 +69,7 @@ class SeptuagintBook(Enum):
     BEL = "bel_theod"
 
 
-class NewTestamentBook(Enum):
+class NewTestamentBook(TheotexEnum):
     MATTHEW = "matthieu"
     MARK = "marc"
     LUKE = "luc"
@@ -93,3 +100,22 @@ class NewTestamentBook(Enum):
 
 
 Book = Union[SeptuagintBook, NewTestamentBook]
+
+
+@dataclass
+class Verse:
+
+    book: Book
+    chapter_num: int
+    verse_num: int
+    french_version: str
+    greek_version: str
+
+    def __dict__(self):
+        return {
+            "book": self.book.value,
+            "chapter_num": self.chapter_num,
+            "verse_num": self.verse_num,
+            "french_version": self.french_version,
+            "greek_version": self.greek_version,
+        }
