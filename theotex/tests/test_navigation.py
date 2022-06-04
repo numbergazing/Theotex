@@ -256,3 +256,21 @@ def test_get_all_verses_septuagint() -> None:
             for point in data:
                 for _, v in point.items():
                     assert v is not None
+
+
+def test_get_all_verses_ntgf() -> None:
+    for book in NewTestamentBook.__members__.values():
+
+        nb_chapters = get_nb_chapters_for(book)
+        for chapter_n in range(1, nb_chapters + 1):
+
+            debug_log.debug(f"Checking data integrity for {book}, chapter n° {chapter_n}")
+
+            nb_verses = get_nb_verses_for(book, chapter_n)
+            data = [point.__dict__() for point in get_all_verses_for(book, chapter_n)]
+
+            assert len(data) == nb_verses
+
+            for point in data:
+                for _, v in point.items():
+                    assert v is not None
