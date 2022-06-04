@@ -1,9 +1,9 @@
 from theotex import Corpus, Book, SeptuagintBook
 
 HOME = "https://theotex.org"
-SEPTUAGINT = f"{HOME}/{Corpus.SEPTUAGINT.value}"
+SEPTUAGINT = f"{HOME}/{Corpus.septante.value}"
 SEPTUAGINT_CHAPTER = SEPTUAGINT + "/{book}/{book}_{chapter_nb}.html"
-NEW_TESTAMENT = f"{HOME}/{Corpus.NEW_TESTAMENT.value}"
+NEW_TESTAMENT = f"{HOME}/{Corpus.nouveau_testament.value}"
 NEW_TESTAMENT_CHAPTER = NEW_TESTAMENT + "/{book}/{book}_{chapter_nb}_gf.html"
 
 
