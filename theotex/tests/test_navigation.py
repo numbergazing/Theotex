@@ -1,7 +1,7 @@
 from logs import debug_log
 from theotex import SeptuagintBook, NewTestamentBook
 
-from navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for
+from navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for, get_verse_for
 
 
 def test_nb_chapters_for() -> None:
@@ -10,7 +10,7 @@ def test_nb_chapters_for() -> None:
     assert data == expected_result
 
 
-def test_get_nb_verses_for():
+def test_get_nb_verses_for() -> None:
     expected_result = [31, 25]
     data = [get_nb_verses_for(SeptuagintBook.GENESIS, 1), get_nb_verses_for(NewTestamentBook.MATTHEW, 1)]
     assert data == expected_result
@@ -274,3 +274,35 @@ def test_get_all_verses_ntgf() -> None:
             for point in data:
                 for _, v in point.items():
                     assert v is not None
+
+
+def test_get_verse_for() -> None:
+    expected_result = [
+        {
+            "book": "genese",
+            "chapter_num": 1,
+            "verse_num": "1",
+            "french_version": "Au commencement Dieu cr\u00c3\u00a9a le ciel et la terre.",
+            "greek_version": "\u00e1\u00bc\u0098\u00ce\u00bd \u00e1\u00bc\u0080\u00cf\u0081\u00cf\u0087\u00e1\u00bf\u0087 \u00e1\u00bc\u0090\u00cf\u0080\u00ce\u00bf\u00e1\u00bd\u00b7\u00ce\u00b7\u00cf\u0083\u00ce\u00b5\u00ce\u00bd \u00e1\u00bd\u0081 \u00ce\u00b8\u00ce\u00b5\u00e1\u00bd\u00b8\u00cf\u0082 \u00cf\u0084\u00e1\u00bd\u00b8\u00ce\u00bd \u00ce\u00bf\u00e1\u00bd\u0090\u00cf\u0081\u00ce\u00b1\u00ce\u00bd\u00e1\u00bd\u00b8\u00ce\u00bd \u00ce\u00ba\u00ce\u00b1\u00e1\u00bd\u00b6 \u00cf\u0084\u00e1\u00bd\u00b4\u00ce\u00bd \u00ce\u00b3\u00e1\u00bf\u0086\u00ce\u00bd."
+        },
+        {
+            "book": "matthieu",
+            "chapter_num": 1,
+            "verse_num": "1",
+            "french_version": "Livre de la g\u00c3\u00a9n\u00c3\u00a9alogie de J\u00c3\u00a9sus-Christ, fils de David, fils d'Abraham.",
+            "greek_version": "\n\u00ce\u0092\u00e1\u00bd\u00b7\u00ce\u00b2\u00ce\u00bb\u00ce\u00bf\u00cf\u0082 \u00ce\u00b3\u00ce\u00b5\u00ce\u00bd\u00e1\u00bd\u00b3\u00cf\u0083\u00ce\u00b5\u00cf\u0089\u00cf\u0082 \u00e1\u00bc\u00b8\u00ce\u00b7\u00cf\u0083\u00ce\u00bf\u00e1\u00bf\u00a6 \u00ce\u00a7\u00cf\u0081\u00ce\u00b9\u00cf\u0083\u00cf\u0084\u00ce\u00bf\u00e1\u00bf\u00a6 \u00cf\u0085\u00e1\u00bc\u00b1\u00ce\u00bf\u00e1\u00bf\u00a6 \u00ce\u0094\u00ce\u00b1\u00cf\u0085\u00e1\u00bd\u00b6\u00ce\u00b4 \u00cf\u0085\u00e1\u00bc\u00b1\u00ce\u00bf\u00e1\u00bf\u00a6 \u00e1\u00bc\u0088\u00ce\u00b2\u00cf\u0081\u00ce\u00b1\u00e1\u00bd\u00b1\u00ce\u00bc. "
+        },
+        {
+            "book": "josue",
+            "chapter_num": 9,
+            "verse_num": "2c",
+            "french_version": "Et sur les pierres il \u00c3\u00a9crivit le Deut\u00c3\u00a9ronome, la loi de Mo\u00c3\u00afse, devant les fils d'Isra\u00c3\u00abl. ",
+            "greek_version": "\u00ce\u00ba\u00ce\u00b1\u00e1\u00bd\u00b6 \u00e1\u00bc\u0094\u00ce\u00b3\u00cf\u0081\u00ce\u00b1\u00cf\u0088\u00ce\u00b5\u00ce\u00bd \u00e1\u00bc\u00b8\u00ce\u00b7\u00cf\u0083\u00ce\u00bf\u00e1\u00bf\u00a6\u00cf\u0082 \u00e1\u00bc\u0090\u00cf\u0080\u00e1\u00bd\u00b6 \u00cf\u0084\u00e1\u00bf\u00b6\u00ce\u00bd \u00ce\u00bb\u00e1\u00bd\u00b7\u00ce\u00b8\u00cf\u0089\u00ce\u00bd \u00cf\u0084\u00e1\u00bd\u00b8 \u00ce\u00b4\u00ce\u00b5\u00cf\u0085\u00cf\u0084\u00ce\u00b5\u00cf\u0081\u00ce\u00bf\u00ce\u00bd\u00e1\u00bd\u00b9\u00ce\u00bc\u00ce\u00b9\u00ce\u00bf\u00ce\u00bd, \u00ce\u00bd\u00e1\u00bd\u00b9\u00ce\u00bc\u00ce\u00bf\u00ce\u00bd \u00ce\u009c\u00cf\u0089\u00cf\u0085\u00cf\u0083\u00e1\u00bf\u0086, \u00e1\u00bd\u0083\u00ce\u00bd \u00e1\u00bc\u0094\u00ce\u00b3\u00cf\u0081\u00ce\u00b1\u00cf\u0088\u00ce\u00b5\u00ce\u00bd \u00e1\u00bc\u0090\u00ce\u00bd\u00e1\u00bd\u00bd\u00cf\u0080\u00ce\u00b9\u00ce\u00bf\u00ce\u00bd \u00cf\u0085\u00e1\u00bc\u00b1\u00e1\u00bf\u00b6\u00ce\u00bd \u00ce\u0099\u00cf\u0083\u00cf\u0081\u00ce\u00b1\u00ce\u00b7\u00ce\u00bb."
+        }
+    ]
+    data = [
+        get_verse_for(SeptuagintBook.GENESIS, 1, "1").__dict__(),
+        get_verse_for(NewTestamentBook.MATTHEW, 1, "1").__dict__(),
+        get_verse_for(SeptuagintBook.JOSHUA, 9, "2c").__dict__(),
+    ]
+    assert data == expected_result
