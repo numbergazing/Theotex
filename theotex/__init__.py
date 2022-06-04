@@ -107,7 +107,7 @@ class Verse:
 
     book: Book
     chapter_num: int
-    verse_num: int
+    verse_num: str  # verse num is a string because some verses are referenced with a number and a letter like : "2c"
     french_version: str
     greek_version: str
 
