@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup, Tag, ResultSet
 from requests import Response
 
+from exceptions import ChapterDoesNotExistError, VerseDoesNotExistError
 from theotex import Book, Verse
 from theotex.urls import construct_chapter_url
 
@@ -70,3 +71,28 @@ def get_all_verses_for(book: Book, chapter_num: int) -> List[Verse]:
         verses.append(Verse(book, chapter_num, verse_num, verse_french, verse_greek))
 
     return verses
+
+
+def get_verse_for(book: Book, chapter_num: int, verse_ref: str) -> Verse:
+
+    html: BeautifulSoup
+    nb_chapters: int
+    verse_refs: List[str]
+    verse_rows: ResultSet
+
+    nb_chapters = get_nb_chapters_for(book)
+
+    if chapter_num > nb_chapters:
+        raise ChapterDoesNotExistError(f"Chapter n° {chapter_num} does not exist for {book.value}")
+
+    html = _get_markup_for(book, chapter_num)
+    verse_rows = _get_filtered_verse_table(html)
+    verse_refs = [row.find("div", class_="num").string for row in verse_rows]
+
+    if verse_ref not in verse_refs:
+        raise VerseDoesNotExistError(f"Verse n° {verse_ref} doesn not exist for chapter {chapter_num} in {book.value}")
+
+    verse_pos = verse_refs.index(verse_ref)
+    verse = verse_rows[verse_pos]
+
+    return Verse(book, chapter_num, verse_ref, verse.find("div", class_="vf").text, verse.find("div", class_="vg").text)
