@@ -211,6 +211,17 @@ class Verse:
             "greek_version": self.greek_version,
         }
 
+    @property
+    def get_french_str(self) -> str:
+        return f"[{_get_book_name(self.book.value)}, {self.chapter_num}:{self.verse_num}] \"{self.french_version}\""
+
+    @property
+    def get_greek_str(self) -> str:
+        return f"[{_get_book_name(self.book.value)}, {self.chapter_num}:{self.verse_num}] \"{self.greek_version}\""
+
+    def __str__(self):
+        return f"{self.get_french_str}\n{self.get_greek_str}"
+
 
 def _slugify(text: str) -> str:
     text = re.sub(r"[éèë]", "e", text)
