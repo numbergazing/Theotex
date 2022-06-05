@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from enum import Enum
 from typing import Union
@@ -209,3 +210,14 @@ class Verse:
             "french_version": self.french_version,
             "greek_version": self.greek_version,
         }
+
+
+def _get_book_name(key: str) -> str | None:
+
+    if key in SeptuagintBook.__members__.keys():
+        return SeptuagintBookName[key].value
+
+    if key in NewTestamentBook.__members__.keys():
+        return NewTestamentBookName[key].value
+
+    return None
