@@ -4,7 +4,7 @@
 import sys
 import argparse
 
-from theotex import _slugify, _get_book
+from theotex import _slugify, _get_book, CorpusName
 from theotex.navigation import get_verse_for, get_verses_for
 
 
@@ -24,6 +24,7 @@ def _init_argparse() -> argparse.ArgumentParser:
     )
     parser.add_argument("--only-french", action="store_true", default=False, required=False)
     parser.add_argument("--only-greek", action="store_true", default=False, required=False)
+    parser.add_argument("--get-corpora", action="store_true", default=False, required=False)
 
     return parser
 
@@ -37,6 +38,12 @@ def main():
     message = str()
     parser = _init_argparse()
     args = parser.parse_args()
+
+    if args.get_corpora is True:
+        corpora = [member.value for member in CorpusName.__members__.values()]
+        message = "\n".join(corpora)
+        print(message)
+        return message
 
     if args.get_verses is not None:
 
