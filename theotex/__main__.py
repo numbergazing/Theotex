@@ -3,7 +3,7 @@
 
 import argparse
 
-from theotex import _slugify, SeptuagintBook
+from theotex import _slugify, _get_book
 from theotex.navigation import get_verse_for, get_verses_for
 
 
@@ -41,11 +41,11 @@ def main():
         verse_refs = args.get_verses[2].split(":")
 
         if len(verse_refs) > 1:
-            for verse in get_verses_for(SeptuagintBook[book_slug], int(args.get_verses[1]), verse_refs):
+            for verse in get_verses_for(_get_book(book_slug), int(args.get_verses[1]), verse_refs):
                 message += f"{str(verse)}\n\n"
             message = message[:-2]
         else:
-            verse = get_verse_for(SeptuagintBook[book_slug], int(args.get_verses[1]), verse_refs[0])
+            verse = get_verse_for(_get_book(book_slug), int(args.get_verses[1]), verse_refs[0])
             message = str(verse)
 
     print(f"{message}")
