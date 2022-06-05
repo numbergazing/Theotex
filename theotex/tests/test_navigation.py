@@ -1,7 +1,8 @@
 from logs import debug_log
 from theotex import SeptuagintBook, NewTestamentBook
 
-from navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for, get_verse_for, get_verses_for
+from navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for, get_verse_for, get_verses_for, \
+    _get_greek_book_name
 
 
 def test_nb_chapters_for() -> None:
@@ -309,7 +310,6 @@ def test_get_verse_for() -> None:
 
 
 def test_get_verses_for() -> None:
-
     expected_result = [
         {
             "book": "genese",
@@ -374,4 +374,10 @@ def test_get_verses_for() -> None:
         }
     ]
     data = [point.__dict__() for point in get_verses_for(SeptuagintBook.josue, 9, ["2", "2c"])]
+    assert data == expected_result
+
+
+def test_get_greek_book_name() -> None:
+    expected_result = ["ΓΕΝΕΣΙΣ", "ΚΑΤΑ ΜΑΘΘΑΙΟΝ"]
+    data = [_get_greek_book_name(SeptuagintBook.genese), _get_greek_book_name(NewTestamentBook.matthieu)]
     assert data == expected_result
