@@ -42,6 +42,8 @@ def main():
 
         book_slug = _slugify(args.get_verses[0])
         verse_refs = args.get_verses[2].split(":")
+        filtered_refs = set(verse_refs) - {""}
+        verse_refs = list(filtered_refs)
 
         if args.only_french is True and args.only_greek is True:
             sys.exit("You can only use one of these options (--only-french, --only-greek) at a time.")
