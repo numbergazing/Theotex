@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup, Tag, ResultSet
 from requests import Response
 
-from exceptions import ChapterDoesNotExistError, VerseDoesNotExistError
 from theotex import Book, Verse
+from theotex.exceptions import ChapterDoesNotExistError, VerseDoesNotExistError
 from theotex.urls import construct_chapter_url
 
 
@@ -16,6 +16,7 @@ def _get_markup_for(book: Book, chapter_num: int) -> BeautifulSoup:
 
     url = construct_chapter_url(book, chapter_num)
     request = requests.get(url)
+    request.encoding = "utf-8"
     return BeautifulSoup(request.text, "html.parser")
 
 
@@ -97,7 +98,7 @@ def get_verse_for(book: Book, chapter_num: int, verse_ref: str) -> Verse:
     verse_pos = verse_refs.index(verse_ref)
     verse = verse_rows[verse_pos]
 
-    return Verse(book, chapter_num, verse_ref, verse.find("div", class_="vf").text, verse.find("div", class_="vg").text)
+    return Verse(book, chapter_num, *_get_verse_data_from_tag(verse))
 
 
 def get_verses_for(book: Book, chapter_num: int, vrefs: List[str]) -> List[Verse]:
