@@ -197,6 +197,8 @@ Book = Union[SeptuagintBook, NewTestamentBook]
 class Verse:
 
     book: Book
+    book_name: str
+    book_greek_name: str
     chapter_num: int
     verse_num: str  # verse num is a string because some verses are referenced with a number and a letter like : "2c"
     french_version: str
@@ -205,6 +207,8 @@ class Verse:
     def __dict__(self):
         return {
             "book": self.book.value,
+            "book_name": self.book_name,
+            "book_greek_name": self.book_greek_name,
             "chapter_num": self.chapter_num,
             "verse_num": self.verse_num,
             "french_version": self.french_version,
@@ -213,11 +217,11 @@ class Verse:
 
     @property
     def get_french_str(self) -> str:
-        return f"[{_get_book_name(self.book.value)}, {self.chapter_num}:{self.verse_num}] \"{self.french_version}\""
+        return f"[{self.book_name}, {self.chapter_num}:{self.verse_num}] \"{self.french_version}\""
 
     @property
     def get_greek_str(self) -> str:
-        return f"[{_get_book_name(self.book.value)}, {self.chapter_num}:{self.verse_num}] \"{self.greek_version}\""
+        return f"[{self.book_greek_name}, {self.chapter_num}:{self.verse_num}] \"{self.greek_version}\""
 
     def __str__(self):
         return f"{self.get_french_str}\n{self.get_greek_str}"

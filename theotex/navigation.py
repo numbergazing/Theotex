@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup, Tag, ResultSet
 from requests import Response
 
-from theotex import Book, Verse
+from theotex import Book, Verse, _get_book_name
 from theotex.exceptions import ChapterDoesNotExistError, VerseDoesNotExistError
 from theotex.urls import construct_chapter_url
 
@@ -37,8 +37,7 @@ def _get_verse_data_from_tag(tag: Tag) -> list:
     ]
 
 
-def _get_greek_book_name(book: Book) -> str:
-    html = _get_markup_for(book, 1)
+def _get_book_greek_name(html: BeautifulSoup) -> str:
     font = html.find("font", class_="tg")
     return font.text[:-2].strip()
 
@@ -73,11 +72,13 @@ def get_all_verses_for(book: Book, chapter_num: int) -> List[Verse]:
     html = _get_markup_for(book, chapter_num)
     verse_rows = _get_filtered_verse_table(html)
 
+    book_name = _get_book_name(book.value)
+    book_greek_name = _get_book_greek_name(html)
     for row in verse_rows:
 
         row: Tag
 
-        verses.append(Verse(book, chapter_num, *_get_verse_data_from_tag(row)))
+        verses.append(Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(row)))
 
     return verses
 
@@ -104,7 +105,10 @@ def get_verse_for(book: Book, chapter_num: int, verse_ref: str) -> Verse:
     verse_pos = verse_refs.index(verse_ref)
     verse = verse_rows[verse_pos]
 
-    return Verse(book, chapter_num, *_get_verse_data_from_tag(verse))
+    book_name = _get_book_name(book.value)
+    book_greek_name = _get_book_greek_name(html)
+
+    return Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(verse))
 
 
 def get_verses_for(book: Book, chapter_num: int, vrefs: List[str]) -> List[Verse]:
@@ -137,10 +141,12 @@ def get_verses_for(book: Book, chapter_num: int, vrefs: List[str]) -> List[Verse
     if end_ref_index < beg_ref_index:
         raise Exception("Your references are in the wrong order")
 
+    book_name = _get_book_name(book.value)
+    book_greek_name = _get_book_greek_name(html)
     for row in verse_rows[beg_ref_index:end_ref_index]:
 
         row: Tag
 
-        verses.append(Verse(book, chapter_num, *_get_verse_data_from_tag(row)))
+        verses.append(Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(row)))
 
     return verses

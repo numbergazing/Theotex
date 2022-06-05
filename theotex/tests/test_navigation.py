@@ -2,7 +2,7 @@ from logs import debug_log
 from theotex import SeptuagintBook, NewTestamentBook
 
 from navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for, get_verse_for, get_verses_for, \
-    _get_greek_book_name
+    _get_book_greek_name, _get_markup_for
 
 
 def test_nb_chapters_for() -> None:
@@ -377,7 +377,9 @@ def test_get_verses_for() -> None:
     assert data == expected_result
 
 
-def test_get_greek_book_name() -> None:
+def test_get_book_greek_name() -> None:
     expected_result = ["ΓΕΝΕΣΙΣ", "ΚΑΤΑ ΜΑΘΘΑΙΟΝ"]
-    data = [_get_greek_book_name(SeptuagintBook.genese), _get_greek_book_name(NewTestamentBook.matthieu)]
+    genesis_html = _get_markup_for(SeptuagintBook.genese, 1)
+    matthew_html = _get_markup_for(NewTestamentBook.matthieu, 1)
+    data = [_get_book_greek_name(genesis_html), _get_book_greek_name(matthew_html)]
     assert data == expected_result
