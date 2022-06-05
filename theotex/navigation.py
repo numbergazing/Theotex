@@ -33,8 +33,14 @@ def _get_verse_data_from_tag(tag: Tag) -> list:
     return [
         tag.find("div", class_="num").string,
         tag.find("div", class_="vf").text,
-        tag.find("div", class_="vg").text
+        tag.find("div", class_="vg").text.strip()
     ]
+
+
+def _get_greek_book_name(book: Book) -> str:
+    html = _get_markup_for(book, 1)
+    font = html.find("font", class_="tg")
+    return font.text[:-2].strip()
 
 
 def get_nb_chapters_for(book: Book) -> int:
