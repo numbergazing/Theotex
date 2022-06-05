@@ -230,6 +230,17 @@ def _slugify(text: str) -> str:
     return text.lower()
 
 
+def _get_book(key: str) -> Book | None:
+
+    if key in SeptuagintBook.__members__.keys():
+        return SeptuagintBook[key]
+
+    if key in NewTestamentBook.__members__.keys():
+        return NewTestamentBook[key]
+
+    return None
+
+
 def _get_book_name(key: str) -> str | None:
 
     if key in SeptuagintBook.__members__.keys():
