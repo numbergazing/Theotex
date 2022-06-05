@@ -212,6 +212,13 @@ class Verse:
         }
 
 
+def _slugify(text: str) -> str:
+    text = re.sub(r"[éèë]", "e", text)
+    text = re.sub(r"ï", "i", text)
+    text = re.sub(r" ", "_", text)
+    return text.lower()
+
+
 def _get_book_name(key: str) -> str | None:
 
     if key in SeptuagintBook.__members__.keys():
