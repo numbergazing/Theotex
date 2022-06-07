@@ -100,7 +100,7 @@ def get_verse_for(book: Book, chapter_num: int, verse_ref: str) -> Verse:
     verse_refs = [row.find("div", class_="num").string for row in verse_rows]
 
     if verse_ref not in verse_refs:
-        raise VerseDoesNotExistError(f"Verse n° {verse_ref} doesn not exist for chapter {chapter_num} in {book.value}")
+        raise VerseDoesNotExistError(f"Verse n° {verse_ref} does not exist for chapter {chapter_num} in {book.value}")
 
     verse_pos = verse_refs.index(verse_ref)
     verse = verse_rows[verse_pos]

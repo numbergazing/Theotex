@@ -102,7 +102,7 @@ def _seek(args: argparse.Namespace) -> str:
     book_slug = _slugify(refs[0])
     verse_refs = refs[2].split(":")
     filtered_refs = set(verse_refs) - {""}
-    verse_refs = list(filtered_refs)
+    verse_refs = sorted(list(filtered_refs))
 
     if args.french_only is True and args.greek_only is True:
         sys.exit("You can only use one of these options (--only-french, --only-greek) at a time.")
