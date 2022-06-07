@@ -3,6 +3,7 @@
 
 import sys
 import argparse
+from string import digits
 from typing import List
 
 from theotex import _slugify, _get_book, CorpusName, SeptuagintBookName, NewTestamentBookName
@@ -103,6 +104,9 @@ def _seek(args: argparse.Namespace) -> str:
     verse_refs = refs[2].split(":")
     filtered_refs = set(verse_refs) - {""}
     verse_refs = sorted(list(filtered_refs))
+
+    if book_slug.startswith(tuple([digit for digit in digits])):
+        book_slug = book_slug[2:] + book_slug[0]
 
     if args.french_only is True and args.greek_only is True:
         sys.exit("You can only use one of these options (--only-french, --only-greek) at a time.")

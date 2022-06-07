@@ -72,7 +72,7 @@ def get_all_verses_for(book: Book, chapter_num: int) -> List[Verse]:
     html = _get_markup_for(book, chapter_num)
     verse_rows = _get_filtered_verse_table(html)
 
-    book_name = _get_book_name(book.value)
+    book_name = _get_book_name(book.name)
     book_greek_name = _get_book_greek_name(html)
     for row in verse_rows:
 
@@ -105,7 +105,7 @@ def get_verse_for(book: Book, chapter_num: int, verse_ref: str) -> Verse:
     verse_pos = verse_refs.index(verse_ref)
     verse = verse_rows[verse_pos]
 
-    book_name = _get_book_name(book.value)
+    book_name = _get_book_name(book.name)
     book_greek_name = _get_book_greek_name(html)
 
     return Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(verse))
@@ -141,7 +141,7 @@ def get_verses_for(book: Book, chapter_num: int, vrefs: List[str]) -> List[Verse
     if end_ref_index < beg_ref_index:
         raise Exception("Your references are in the wrong order")
 
-    book_name = _get_book_name(book.value)
+    book_name = _get_book_name(book.name)
     book_greek_name = _get_book_greek_name(html)
     for row in verse_rows[beg_ref_index:end_ref_index]:
 
