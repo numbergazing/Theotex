@@ -39,7 +39,7 @@ def _get_verse_data_from_tag(tag: Tag) -> list:
 
 def _get_book_greek_name(html: BeautifulSoup) -> str:
     font = html.find("font", class_="tg")
-    return font.text[:-2].strip()
+    return font.text[:-2].strip().lower().capitalize()
 
 
 def get_nb_chapters_for(book: Book) -> int:
