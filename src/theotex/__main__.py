@@ -6,7 +6,7 @@ import argparse
 from string import digits
 from typing import List
 
-from theotex import _slugify, _get_book, CorpusName, SeptuagintBookName, NewTestamentBookName
+from theotex import _slugify, _get_book, CorpusName, SeptuagintBookName, NewTestamentBookName, __version__
 from theotex.navigation import get_verse_for, get_verses_for
 
 
@@ -17,7 +17,7 @@ def _init_argparse() -> argparse.ArgumentParser:
         usage="%(prog)s [OPTIONS]",
         description="Print Bible verses in French and Greek from https://theotex.org."
     )
-    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s version 1.0.0")
+    parser.add_argument("-v", "--version", action="version", version=f"%(prog)s version {__version__}")
     parser.add_argument(
         "-s", "--seek",
         action="store",
@@ -163,5 +163,7 @@ def main():
         return _seek(args)
 
 
-main()
-sys.exit(0)
+if __name__ == "__main__":
+
+    main()
+    sys.exit(0)

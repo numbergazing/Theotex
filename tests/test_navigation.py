@@ -1,7 +1,7 @@
-from logs import debug_log
+from theotex.logs import debug_log
 from theotex import SeptuagintBook, NewTestamentBook
 
-from navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for, get_verse_for, get_verses_for, \
+from theotex.navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for, get_verse_for, get_verses_for, \
     _get_book_greek_name, _get_markup_for
 
 

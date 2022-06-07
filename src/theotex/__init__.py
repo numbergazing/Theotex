@@ -4,6 +4,9 @@ from enum import Enum
 from typing import Union
 
 
+__version__ = "1.0.0"
+
+
 class TheotexEnum(Enum):
 
     def __repr__(self):
