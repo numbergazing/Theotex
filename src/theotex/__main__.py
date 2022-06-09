@@ -1,12 +1,10 @@
 import sys
-from string import digits
+import string
 from typing import List
 
 import click
 
 import theotex
-from theotex import _slugify, _get_book, CorpusName, SeptuagintBookName, NewTestamentBookName
-from theotex.navigation import get_verse_for, get_verses_for
 
 
 def print_version(ctx, _, value):
@@ -39,13 +37,7 @@ def _theotex():
 @_theotex.command()
 def corpora() -> None:
     """Display a list of the available corpora."""
-
-    corpora: List[str]
-    message: str
-
-    corpora = [member.value for member in CorpusName.__members__.values()]
-    message = "\n".join(corpora)
-    click.echo(message)
+    click.echo("\n".join(theotex.CORPUS_NAMES))
 
 
 @_theotex.command()
@@ -54,24 +46,18 @@ def books(corpus: str) -> None:
     """Display a list of the available books for a corpus."""
 
     corpus_slug: str
-    corpora: List[str]
-    books: List[str]
-    message: str
+    book_list: List[str]
 
-    corpus_slug = _slugify(corpus)
-    corpora = [_slugify(member.value) for member in CorpusName.__members__.values()]
+    corpus_slug = theotex.util.slugify(corpus)
 
-    if corpus_slug not in corpora:
+    if corpus_slug not in theotex.CORPUS_NAMES:
         sys.exit(f"The corpus {corpus} does not exist.")
 
     match corpus_slug:
         case "septante":
-            books = [member.value for member in SeptuagintBookName.__members__.values()]
+            click.echo("\n".join(theotex.SEPTUAGINT_BOOK_NAMES))
         case "nouveau_testament":
-            books = [member.value for member in NewTestamentBookName.__members__.values()]
-
-    message = "\n".join(books)
-    click.echo(message)
+            click.echo("\n".join(theotex.NEW_TESTAMENT_BOOK_NAMES))
 
 
 @_theotex.command()
@@ -94,12 +80,12 @@ def seek(book: str, chapter: int, verses: str, french_only: bool, greek_only: bo
     filtered_refs: set
 
     message = str()
-    book_slug = _slugify(book)
+    book_slug = theotex.util.slugify(book)
     verse_refs = verses.split(":")
     filtered_refs = set(verse_refs) - {""}
     verse_refs = sorted(list(filtered_refs))
 
-    if book_slug.startswith(tuple([digit for digit in digits])):
+    if book_slug.startswith(tuple([digit for digit in string.digits])):
         book_slug = book_slug[2:] + book_slug[0]
 
     if french_only is True and greek_only is True:
@@ -116,7 +102,7 @@ def seek(book: str, chapter: int, verses: str, french_only: bool, greek_only: bo
         else:
             to_erase_index = -2
 
-        for verse in get_verses_for(_get_book(book_slug), chapter, verse_refs):
+        for verse in theotex.navigation.get_verses_for(theotex.get_book_from(book_slug), chapter, verse_refs):
             if french_only:
                 message += f"{verse.get_french_str}\n"
             elif greek_only:
@@ -127,7 +113,7 @@ def seek(book: str, chapter: int, verses: str, french_only: bool, greek_only: bo
         message = message[:to_erase_index]
 
     else:
-        verse = get_verse_for(_get_book(book_slug), chapter, verse_refs[0])
+        verse = theotex.navigation.get_verse_for(theotex.get_book_from(book_slug), chapter, verse_refs[0])
         if french_only:
             message = verse.get_french_str
         elif greek_only:

@@ -1,19 +1,21 @@
-from theotex.logs import debug_log
-from theotex import SeptuagintBook, NewTestamentBook
-
-from theotex.navigation import get_nb_chapters_for, get_all_verses_for, get_nb_verses_for, get_verse_for, get_verses_for, \
-    _get_book_greek_name, _get_markup_for
+import theotex
 
 
 def test_nb_chapters_for() -> None:
     expected_result = [50, 28]
-    data = [get_nb_chapters_for(SeptuagintBook.genese), get_nb_chapters_for(NewTestamentBook.matthieu)]
+    data = [
+        theotex.navigation.get_nb_chapters_for(theotex.SeptuagintBook.genese),
+        theotex.navigation.get_nb_chapters_for(theotex.NewTestamentBook.matthieu)
+    ]
     assert data == expected_result
 
 
 def test_get_nb_verses_for() -> None:
     expected_result = [31, 25]
-    data = [get_nb_verses_for(SeptuagintBook.genese, 1), get_nb_verses_for(NewTestamentBook.matthieu, 1)]
+    data = [
+        theotex.navigation.get_nb_verses_for(theotex.SeptuagintBook.genese, 1),
+        theotex.navigation.get_nb_verses_for(theotex.NewTestamentBook.matthieu, 1)
+    ]
     assert data == expected_result
 
 
@@ -299,20 +301,20 @@ def test_get_all_verses_for() -> None:
             "greek_version": "\u03ba\u03b1\u1f76 \u03b5\u1f36\u03b4\u03b5\u03bd \u1f41 \u03b8\u03b5\u1f78\u03c2 \u03c4\u1f70 \u03c0\u1f71\u03bd\u03c4\u03b1, \u1f45\u03c3\u03b1 \u1f10\u03c0\u03bf\u1f77\u03b7\u03c3\u03b5\u03bd, \u03ba\u03b1\u1f76 \u1f30\u03b4\u03bf\u1f7a \u03ba\u03b1\u03bb\u1f70 \u03bb\u1f77\u03b1\u03bd. \u03ba\u03b1\u1f76 \u1f10\u03b3\u1f73\u03bd\u03b5\u03c4\u03bf \u1f11\u03c3\u03c0\u1f73\u03c1\u03b1 \u03ba\u03b1\u1f76 \u1f10\u03b3\u1f73\u03bd\u03b5\u03c4\u03bf \u03c0\u03c1\u03c9\u1f77, \u1f21\u03bc\u1f73\u03c1\u03b1 \u1f15\u03ba\u03c4\u03b7."
         }
     ]
-    data = [point.__dict__() for point in get_all_verses_for(SeptuagintBook.genese, 1)]
+    data = [point.__dict__() for point in theotex.navigation.get_all_verses_for(theotex.SeptuagintBook.genese, 1)]
     assert data == expected_result
 
 
 def test_get_all_verses_septuagint() -> None:
-    for book in SeptuagintBook.__members__.values():
+    for book in theotex.SeptuagintBook.__members__.values():
 
-        nb_chapters = get_nb_chapters_for(book)
+        nb_chapters = theotex.navigation.get_nb_chapters_for(book)
         for chapter_n in sorted(range(1, nb_chapters + 1)[::3]):
 
-            debug_log.debug(f"Checking data integrity for {book}, chapter n° {chapter_n}")
+            theotex.logs.debug.log(f"Checking data integrity for {book}, chapter n° {chapter_n}")
 
-            nb_verses = get_nb_verses_for(book, chapter_n)
-            data = [point.__dict__() for point in get_all_verses_for(book, chapter_n)]
+            nb_verses = theotex.navigation.get_nb_verses_for(book, chapter_n)
+            data = [point.__dict__() for point in theotex.navigation.get_all_verses_for(book, chapter_n)]
 
             assert len(data) == nb_verses
 
@@ -322,15 +324,15 @@ def test_get_all_verses_septuagint() -> None:
 
 
 def test_get_all_verses_ntgf() -> None:
-    for book in NewTestamentBook.__members__.values():
+    for book in theotex.NewTestamentBook.__members__.values():
 
-        nb_chapters = get_nb_chapters_for(book)
+        nb_chapters = theotex.navigation.get_nb_chapters_for(book)
         for chapter_n in sorted(range(1, nb_chapters + 1)[::3]):
 
-            debug_log.debug(f"Checking data integrity for {book}, chapter n° {chapter_n}")
+            theotex.logs.debug.log(f"Checking data integrity for {book}, chapter n° {chapter_n}")
 
-            nb_verses = get_nb_verses_for(book, chapter_n)
-            data = [point.__dict__() for point in get_all_verses_for(book, chapter_n)]
+            nb_verses = theotex.navigation.get_nb_verses_for(book, chapter_n)
+            data = [point.__dict__() for point in theotex.navigation.get_all_verses_for(book, chapter_n)]
 
             assert len(data) == nb_verses
 
@@ -370,9 +372,9 @@ def test_get_verse_for() -> None:
         }
     ]
     data = [
-        get_verse_for(SeptuagintBook.genese, 1, "1").__dict__(),
-        get_verse_for(NewTestamentBook.matthieu, 1, "1").__dict__(),
-        get_verse_for(SeptuagintBook.josue, 9, "2c").__dict__(),
+        theotex.navigation.get_verse_for(theotex.SeptuagintBook.genese, 1, "1").__dict__(),
+        theotex.navigation.get_verse_for(theotex.NewTestamentBook.matthieu, 1, "1").__dict__(),
+        theotex.navigation.get_verse_for(theotex.SeptuagintBook.josue, 9, "2c").__dict__(),
     ]
     assert data == expected_result
 
@@ -416,7 +418,11 @@ def test_get_verses_for() -> None:
             "greek_version": "\u03ba\u03b1\u1f76 \u1f10\u03be\u1f75\u03bd\u03b5\u03b3\u03ba\u03b5\u03bd \u1f21 \u03b3\u1fc6 \u03b2\u03bf\u03c4\u1f71\u03bd\u03b7\u03bd \u03c7\u1f79\u03c1\u03c4\u03bf\u03c5, \u03c3\u03c0\u03b5\u1fd6\u03c1\u03bf\u03bd \u03c3\u03c0\u1f73\u03c1\u03bc\u03b1 \u03ba\u03b1\u03c4\u1f70 \u03b3\u1f73\u03bd\u03bf\u03c2 \u03ba\u03b1\u1f76 \u03ba\u03b1\u03b8 \u1f41\u03bc\u03bf\u03b9\u1f79\u03c4\u03b7\u03c4\u03b1, \u03ba\u03b1\u1f76 \u03be\u1f7b\u03bb\u03bf\u03bd \u03ba\u1f71\u03c1\u03c0\u03b9\u03bc\u03bf\u03bd \u03c0\u03bf\u03b9\u03bf\u1fe6\u03bd \u03ba\u03b1\u03c1\u03c0\u1f79\u03bd, \u03bf\u1f57 \u03c4\u1f78 \u03c3\u03c0\u1f73\u03c1\u03bc\u03b1 \u03b1\u1f50\u03c4\u03bf\u1fe6 \u1f10\u03bd \u03b1\u1f50\u03c4\u1ff7 \u03ba\u03b1\u03c4\u1f70 \u03b3\u1f73\u03bd\u03bf\u03c2 \u1f10\u03c0\u1f76 \u03c4\u1fc6\u03c2 \u03b3\u1fc6\u03c2. \u03ba\u03b1\u1f76 \u03b5\u1f36\u03b4\u03b5\u03bd \u1f41 \u03b8\u03b5\u1f78\u03c2 \u1f45\u03c4\u03b9 \u03ba\u03b1\u03bb\u1f79\u03bd."
         }
     ]
-    data = [point.__dict__() for point in get_verses_for(SeptuagintBook.genese, 1, ["9", "12"])]
+    data = [
+        point.__dict__()
+        for point
+        in theotex.navigation.get_verses_for(theotex.SeptuagintBook.genese, 1, ["9", "12"])
+    ]
     assert data == expected_result
 
     expected_result = [
@@ -457,13 +463,9 @@ def test_get_verses_for() -> None:
             "greek_version": "\u03ba\u03b1\u1f76 \u1f14\u03b3\u03c1\u03b1\u03c8\u03b5\u03bd \u1f38\u03b7\u03c3\u03bf\u1fe6\u03c2 \u1f10\u03c0\u1f76 \u03c4\u1ff6\u03bd \u03bb\u1f77\u03b8\u03c9\u03bd \u03c4\u1f78 \u03b4\u03b5\u03c5\u03c4\u03b5\u03c1\u03bf\u03bd\u1f79\u03bc\u03b9\u03bf\u03bd, \u03bd\u1f79\u03bc\u03bf\u03bd \u039c\u03c9\u03c5\u03c3\u1fc6, \u1f43\u03bd \u1f14\u03b3\u03c1\u03b1\u03c8\u03b5\u03bd \u1f10\u03bd\u1f7d\u03c0\u03b9\u03bf\u03bd \u03c5\u1f31\u1ff6\u03bd \u0399\u03c3\u03c1\u03b1\u03b7\u03bb."
         }
     ]
-    data = [point.__dict__() for point in get_verses_for(SeptuagintBook.josue, 9, ["2", "2c"])]
-    assert data == expected_result
-
-
-def test_get_book_greek_name() -> None:
-    expected_result = ["Γενεσις", "Κατα μαθθαιον"]
-    genesis_html = _get_markup_for(SeptuagintBook.genese, 1)
-    matthew_html = _get_markup_for(NewTestamentBook.matthieu, 1)
-    data = [_get_book_greek_name(genesis_html), _get_book_greek_name(matthew_html)]
+    data = [
+        point.__dict__()
+        for point
+        in theotex.navigation.get_verses_for(theotex.SeptuagintBook.josue, 9, ["2", "2c"])
+    ]
     assert data == expected_result

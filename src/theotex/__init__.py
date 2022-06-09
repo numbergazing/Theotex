@@ -1,10 +1,14 @@
-import re
 from dataclasses import dataclass
 from enum import Enum
 from typing import Union
 
-
 __version__ = "1.0.0"
+
+from theotex import util
+from theotex import navigation
+from theotex import logs
+from theotex import urls
+from theotex import exceptions
 
 
 class TheotexEnum(Enum):
@@ -194,6 +198,9 @@ class NewTestamentBookName(TheotexEnum):
 
 
 Book = Union[SeptuagintBook, NewTestamentBook]
+CORPUS_NAMES = [util.slugify(member.value) for member in CorpusName.__members__.values()]
+SEPTUAGINT_BOOK_NAMES = [member.value for member in SeptuagintBookName.__members__.values()]
+NEW_TESTAMENT_BOOK_NAMES = [member.value for member in NewTestamentBookName.__members__.values()]
 
 
 @dataclass
@@ -230,14 +237,7 @@ class Verse:
         return f"{self.get_french_str}\n{self.get_greek_str}"
 
 
-def _slugify(text: str) -> str:
-    text = re.sub(r"[éèë]", "e", text)
-    text = re.sub(r"ï", "i", text)
-    text = re.sub(r" ", "_", text)
-    return text.lower()
-
-
-def _get_book(key: str) -> Book | None:
+def get_book_from(key: str) -> Book | None:
 
     if key in SeptuagintBook.__members__.keys():
         return SeptuagintBook[key]
@@ -248,7 +248,7 @@ def _get_book(key: str) -> Book | None:
     return None
 
 
-def _get_book_name(key: str) -> str | None:
+def get_book_name_from(key: str) -> str | None:
 
     if key in SeptuagintBook.__members__.keys():
         return SeptuagintBookName[key].value
