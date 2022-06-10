@@ -3,6 +3,7 @@ import logging
 import theotex
 
 logging.getLogger("urllib3").setLevel(logging.WARNING)  # .propagate = False to deactivate completely
+test_navigation_log = logging.getLogger("test_navigation_log")
 
 
 def test_nb_chapters_for() -> None:
@@ -315,7 +316,7 @@ def test_get_all_verses_septuagint() -> None:
         nb_chapters = theotex.get_nb_chapters_for(book)
         for chapter_n in sorted(range(1, nb_chapters + 1)[::3]):
 
-            print(f"Checking data integrity for {book}, chapter n° {chapter_n}")
+            test_navigation_log.debug(f"Checking data integrity for {book}, chapter n° {chapter_n}")
 
             nb_verses = theotex.get_nb_verses_for(book, chapter_n)
             data = [point.__dict__() for point in theotex.get_all_verses_for(book, chapter_n)]
@@ -333,7 +334,7 @@ def test_get_all_verses_ntgf() -> None:
         nb_chapters = theotex.get_nb_chapters_for(book)
         for chapter_n in sorted(range(1, nb_chapters + 1)[::3]):
 
-            print(f"Checking data integrity for {book}, chapter n° {chapter_n}")
+            test_navigation_log.debug(f"Checking data integrity for {book}, chapter n° {chapter_n}")
 
             nb_verses = theotex.get_nb_verses_for(book, chapter_n)
             data = [point.__dict__() for point in theotex.get_all_verses_for(book, chapter_n)]
