@@ -1,17 +1,22 @@
 from typing import List
 
+__all__ = ["get_nb_chapters_for", "get_nb_verses_for", "get_all_verses_for", "get_verse_for", "get_verses_for"]
+
 import bs4
 import requests
 
-import theotex
+from .util import Book, Verse
+from . import urls
+from . import util
+from . import exceptions
 
 
-def _get_markup_for(book: theotex.Book, chapter_num: int) -> bs4.BeautifulSoup:
+def _get_markup_for(book: Book, chapter_num: int) -> bs4.BeautifulSoup:
 
     url: str
     request: requests.Response
 
-    url = theotex.urls.construct_chapter_url(book, chapter_num)
+    url = urls.construct_chapter_url(book, chapter_num)
     request = requests.get(url)
     request.encoding = "utf-8"
     return bs4.BeautifulSoup(request.text, "html.parser")
@@ -39,7 +44,7 @@ def _get_book_greek_name(html: bs4.BeautifulSoup) -> str:
     return font.text[:-2].strip().lower().capitalize()
 
 
-def get_nb_chapters_for(book: theotex.Book) -> int:
+def get_nb_chapters_for(book: Book) -> int:
 
     html: bs4.BeautifulSoup
     last_chapter_link: bs4.Tag
@@ -50,7 +55,7 @@ def get_nb_chapters_for(book: theotex.Book) -> int:
     return int(last_chapter_link.text)
 
 
-def get_nb_verses_for(book: theotex.Book, chapter_num: int) -> int:
+def get_nb_verses_for(book: Book, chapter_num: int) -> int:
 
     html: bs4.BeautifulSoup
 
@@ -59,28 +64,28 @@ def get_nb_verses_for(book: theotex.Book, chapter_num: int) -> int:
     return len(_get_filtered_verse_table(html))
 
 
-def get_all_verses_for(book: theotex.Book, chapter_num: int) -> List[theotex.Verse]:
+def get_all_verses_for(book: Book, chapter_num: int) -> List[Verse]:
 
     html: bs4.BeautifulSoup
     verse_rows: bs4.ResultSet
-    verses: List[theotex.Verse]
+    verses: List[Verse]
 
     verses = []
     html = _get_markup_for(book, chapter_num)
     verse_rows = _get_filtered_verse_table(html)
 
-    book_name = theotex.get_book_name_from(book.name)
+    book_name = util.get_book_name_from(book.name)
     book_greek_name = _get_book_greek_name(html)
     for row in verse_rows:
 
         row: bs4.Tag
 
-        verses.append(theotex.Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(row)))
+        verses.append(Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(row)))
 
     return verses
 
 
-def get_verse_for(book: theotex.Book, chapter_num: int, verse_ref: str) -> theotex.Verse:
+def get_verse_for(book: Book, chapter_num: int, verse_ref: str) -> Verse:
 
     html: bs4.BeautifulSoup
     nb_chapters: int
@@ -90,34 +95,34 @@ def get_verse_for(book: theotex.Book, chapter_num: int, verse_ref: str) -> theot
     nb_chapters = get_nb_chapters_for(book)
 
     if chapter_num > nb_chapters:
-        raise theotex.exceptions.ChapterDoesNotExistError(f"Chapter n° {chapter_num} does not exist for {book.value}")
+        raise exceptions.ChapterDoesNotExistError(f"Chapter n° {chapter_num} does not exist for {book.value}")
 
     html = _get_markup_for(book, chapter_num)
     verse_rows = _get_filtered_verse_table(html)
     verse_refs = [row.find("div", class_="num").string for row in verse_rows]
 
     if verse_ref not in verse_refs:
-        raise theotex.exceptions.VerseDoesNotExistError(
+        raise exceptions.VerseDoesNotExistError(
             f"Verse n° {verse_ref} does not exist for chapter {chapter_num} in {book.value}"
         )
 
     verse_pos = verse_refs.index(verse_ref)
     verse = verse_rows[verse_pos]
 
-    book_name = theotex.get_book_name_from(book.name)
+    book_name = util.get_book_name_from(book.name)
     book_greek_name = _get_book_greek_name(html)
 
-    return theotex.Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(verse))
+    return Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(verse))
 
 
-def get_verses_for(book: theotex.Book, chapter_num: int, vrefs: List[str]) -> List[theotex.Verse]:
+def get_verses_for(book: Book, chapter_num: int, vrefs: List[str]) -> List[Verse]:
 
-    verses: List[theotex.Verse]
+    verses: List[Verse]
     html: bs4.BeautifulSoup
     nb_chapters: int
     verse_refs: List[str]
     verse_rows: bs4.ResultSet
-    verses: List[theotex.Verse]
+    verses: List[Verse]
 
     verses = []
     nb_chapters = get_nb_chapters_for(book)
@@ -126,7 +131,7 @@ def get_verses_for(book: theotex.Book, chapter_num: int, vrefs: List[str]) -> Li
         raise Exception("You need to give exactly 2 references in vrefs")
 
     if chapter_num > nb_chapters:
-        raise theotex.exceptions.ChapterDoesNotExistError(f"Chapter n° {chapter_num} does not exist for {book.value}")
+        raise exceptions.ChapterDoesNotExistError(f"Chapter n° {chapter_num} does not exist for {book.value}")
 
     html = _get_markup_for(book, chapter_num)
     verse_rows = _get_filtered_verse_table(html)
@@ -134,7 +139,7 @@ def get_verses_for(book: theotex.Book, chapter_num: int, vrefs: List[str]) -> Li
 
     for verse_ref in vrefs:
         if verse_ref not in verse_refs:
-            raise theotex.exceptions.VerseDoesNotExistError(
+            raise exceptions.VerseDoesNotExistError(
                 f"Verse n° {verse_ref} does not exist for chapter {chapter_num} in {book.value}"
             )
 
@@ -142,12 +147,12 @@ def get_verses_for(book: theotex.Book, chapter_num: int, vrefs: List[str]) -> Li
     if end_ref_index < beg_ref_index:
         raise Exception("Your references are in the wrong order")
 
-    book_name = theotex.get_book_name_from(book.name)
+    book_name = util.get_book_name_from(book.name)
     book_greek_name = _get_book_greek_name(html)
     for row in verse_rows[beg_ref_index:end_ref_index]:
 
         row: bs4.Tag
 
-        verses.append(theotex.Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(row)))
+        verses.append(Verse(book, book_name, book_greek_name, chapter_num, *_get_verse_data_from_tag(row)))
 
     return verses

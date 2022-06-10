@@ -4,14 +4,17 @@ from typing import List
 
 import click
 
-import theotex
+from . import __version__
+from theotex.util import CORPUS_NAMES, SEPTUAGINT_BOOK_NAMES, NEW_TESTAMENT_BOOK_NAMES
+from . import navigation
+from . import util
 
 
 def print_version(ctx, _, value):
     if not value or ctx.resilient_parsing:
         return
     click.echo(f"""
-    theotex, version {theotex.__version__}
+    theotex, version {__version__}
     
     Datasource: https://theotex.org
     Developer: numbergazing
@@ -29,18 +32,18 @@ def print_version(ctx, _, value):
     is_eager=True,
     help="Output version information and exit"
 )
-def _theotex():
+def theotex():
     """Print Bible verses in French and Greek from https://theotex.org."""
     pass
 
 
-@_theotex.command()
+@theotex.command()
 def corpora() -> None:
     """Display a list of the available corpora."""
-    click.echo("\n".join(theotex.CORPUS_NAMES))
+    click.echo("\n".join(CORPUS_NAMES))
 
 
-@_theotex.command()
+@theotex.command()
 @click.argument("corpus", type=click.STRING)
 def books(corpus: str) -> None:
     """Display a list of the available books for a corpus."""
@@ -48,19 +51,19 @@ def books(corpus: str) -> None:
     corpus_slug: str
     book_list: List[str]
 
-    corpus_slug = theotex.util.slugify(corpus)
+    corpus_slug = util.slugify(corpus)
 
-    if corpus_slug not in theotex.CORPUS_NAMES:
+    if corpus_slug not in CORPUS_NAMES:
         sys.exit(f"The corpus {corpus} does not exist.")
 
     match corpus_slug:
         case "septante":
-            click.echo("\n".join(theotex.SEPTUAGINT_BOOK_NAMES))
+            click.echo("\n".join(SEPTUAGINT_BOOK_NAMES))
         case "nouveau_testament":
-            click.echo("\n".join(theotex.NEW_TESTAMENT_BOOK_NAMES))
+            click.echo("\n".join(NEW_TESTAMENT_BOOK_NAMES))
 
 
-@_theotex.command()
+@theotex.command()
 @click.argument("book", type=click.STRING)
 @click.argument("chapter", type=click.INT)
 @click.argument("verses", type=click.STRING, metavar="[VERSE | VERSE:VERSE]")
@@ -80,7 +83,7 @@ def seek(book: str, chapter: int, verses: str, french_only: bool, greek_only: bo
     filtered_refs: set
 
     message = str()
-    book_slug = theotex.util.slugify(book)
+    book_slug = util.slugify(book)
     verse_refs = verses.split(":")
     filtered_refs = set(verse_refs) - {""}
     verse_refs = sorted(list(filtered_refs))
@@ -102,7 +105,7 @@ def seek(book: str, chapter: int, verses: str, french_only: bool, greek_only: bo
         else:
             to_erase_index = -2
 
-        for verse in theotex.navigation.get_verses_for(theotex.get_book_from(book_slug), chapter, verse_refs):
+        for verse in navigation.get_verses_for(util.get_book_from(book_slug), chapter, verse_refs):
             if french_only:
                 message += f"{verse.get_french_str}\n"
             elif greek_only:
@@ -113,7 +116,7 @@ def seek(book: str, chapter: int, verses: str, french_only: bool, greek_only: bo
         message = message[:to_erase_index]
 
     else:
-        verse = theotex.navigation.get_verse_for(theotex.get_book_from(book_slug), chapter, verse_refs[0])
+        verse = navigation.get_verse_for(util.get_book_from(book_slug), chapter, verse_refs[0])
         if french_only:
             message = verse.get_french_str
         elif greek_only:
@@ -126,5 +129,5 @@ def seek(book: str, chapter: int, verses: str, french_only: bool, greek_only: bo
 
 if __name__ == "__main__":
 
-    _theotex()
+    theotex()
     sys.exit(0)

@@ -1,7 +1,5 @@
 import logging
 
-logging.getLogger("urllib3").setLevel(logging.WARNING)  # .propagate = False to deactivate completely
-
 debug = logging.getLogger("debug")
 debug.setLevel(logging.DEBUG)
 
