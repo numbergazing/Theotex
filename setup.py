@@ -1,11 +1,9 @@
-from distutils.core import setup
-
 import setuptools
 
 with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
-setup(
+setuptools.setup(
     name='theotex',
     version='1.0.0',
     url='https://github.com/numbergazing/Theotex',
@@ -28,8 +26,5 @@ setup(
         'Natural Language :: English',
         'Natural Language :: French'
     ],
-    python_requires='>=3.10.4',
-    py_modules=['theotex'],
-    package_dir={'':'src/theothex'},
-    install_requires=[]
+    python_requires='>=3.10.4'
 )
