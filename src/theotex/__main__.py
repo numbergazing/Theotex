@@ -1,3 +1,5 @@
+__all__ = []
+
 import sys
 import string
 from typing import List
@@ -5,7 +7,6 @@ from typing import List
 import click
 
 from . import __version__
-from theotex.util import CORPUS_NAMES, SEPTUAGINT_BOOK_NAMES, NEW_TESTAMENT_BOOK_NAMES
 from . import navigation
 from . import util
 
@@ -40,7 +41,7 @@ def theotex():
 @theotex.command()
 def corpora() -> None:
     """Display a list of the available corpora."""
-    click.echo("\n".join(CORPUS_NAMES))
+    click.echo("\n".join(util.CORPUS_NAMES))
 
 
 @theotex.command()
@@ -53,14 +54,14 @@ def books(corpus: str) -> None:
 
     corpus_slug = util.slugify(corpus)
 
-    if corpus_slug not in CORPUS_NAMES:
+    if corpus_slug not in util.CORPUS_NAMES:
         sys.exit(f"The corpus {corpus} does not exist.")
 
     match corpus_slug:
         case "septante":
-            click.echo("\n".join(SEPTUAGINT_BOOK_NAMES))
+            click.echo("\n".join(util.SEPTUAGINT_BOOK_NAMES))
         case "nouveau_testament":
-            click.echo("\n".join(NEW_TESTAMENT_BOOK_NAMES))
+            click.echo("\n".join(util.NEW_TESTAMENT_BOOK_NAMES))
 
 
 @theotex.command()
