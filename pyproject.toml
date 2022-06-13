@@ -20,7 +20,6 @@ keywords = [
 ]
 
 [tool.poetry.urls]
-homepage = ""
 repository = "https://github.com/numbergazing/Theotex/"
 "Bug Tracker" = "https://github.com/numbergazing/Theotex/issues"
 
