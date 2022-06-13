@@ -1,11 +1,10 @@
 [tool.poetry]
 name = "theotex"
 version = "1.0.0"
-urls = { homepage = "https://github.com/numbergazing/theotex", bugtracker = "https://github.com/numbergazing/Theotex/issues" }
 description = "A python package to get Bible verses from https://theotex.org"
-authors = ["numbergazing <manoahbernier@gmail.com>"]
+authors = ["numbergazing <hello@numbergazing.com>"]
 readme = "README.md"
-license = "LICENSE"
+license = "MIT"
 classifiers = [
     "Programming Language :: Python :: 3.10",
     "License :: OSI Approved :: MIT License",
@@ -19,7 +18,14 @@ keywords = [
     "theotex", "bible", "septuagint", "new", "testament", "reader",
     "septante", "nouveau", "testament", "lecteur"
 ]
-scripts = { theotex = "theotex.__main__" }
+
+[tool.poetry.urls]
+homepage = ""
+repository = "https://github.com/numbergazing/Theotex/"
+"Bug Tracker" = "https://github.com/python-poetry/poetry/issues"
+
+[tool.poetry.scripts]
+theotex = "theotex.__main__:theotex"
 
 [tool.poetry.dependencies]
 python = "^3.10"
