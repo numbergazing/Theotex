@@ -22,7 +22,7 @@ keywords = [
 [tool.poetry.urls]
 homepage = ""
 repository = "https://github.com/numbergazing/Theotex/"
-"Bug Tracker" = "https://github.com/python-poetry/poetry/issues"
+"Bug Tracker" = "https://github.com/numbergazing/Theotex/issues"
 
 [tool.poetry.scripts]
 theotex = "theotex.__main__:theotex"
